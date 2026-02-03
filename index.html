@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agile Task Board - Story Point Estimation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-title">
+                    <h1><i class="fas fa-tasks"></i> Agile Task Board</h1>
+                    <p class="subtitle">Story Point Estimation System</p>
+                </div>
+                <div class="user-profile" id="userProfile" style="display: none;">
+                    <div class="profile-info">
+                        <img id="userAvatar" class="user-avatar" src="" alt="User">
+                        <div class="profile-details">
+                            <span class="user-name" id="userName">Guest</span>
+                            <span class="user-email" id="userEmail">guest@example.com</span>
+                        </div>
+                    </div>
+                    <button class="btn-notification-toggle" onclick="toggleNotificationSettings()" title="ตั้งค่าการแจ้งเตือน">
+                        <i class="fas fa-bell" id="notificationIcon"></i>
+                    </button>
+                    <button class="btn-logout" onclick="signOut()" title="ออกจากระบบ">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                <div class="login-prompt" id="loginPrompt" style="display: none;">
+                    <button class="btn-login-prompt" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-list-check"></i>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalTasks">0</span>
+                    <span class="stat-label">งานทั้งหมด</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalPoints">0</span>
+                    <span class="stat-label">Story Points รวม</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <span class="stat-value" id="inProgress">0</span>
+                    <span class="stat-label">กำลังทำ</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-info">
+                    <span class="stat-value" id="completed">0</span>
+                    <span class="stat-label">เสร็จแล้ว</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h2><i class="fas fa-plus-circle"></i> เพิ่มงานหลัก (Epic/User Story)</h2>
+            <form id="taskForm">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="taskName"><i class="fas fa-pencil"></i> ชื่องานหลัก / User Story</label>
+                        <input type="text" id="taskName" placeholder="เช่น: พัฒนาระบบล็อกอินและสมัครสมาชิก" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="assignee"><i class="fas fa-user"></i> ผู้รับผิดชอบหลัก</label>
+                        <input type="text" id="assignee" placeholder="เช่น: นาย A" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription"><i class="fas fa-align-left"></i> รายละเอียด</label>
+                        <input type="text" id="taskDescription" placeholder="อธิบายงานโดยย่อ">
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate"><i class="fas fa-calendar"></i> วันครบกำหนด</label>
+                        <input type="datetime-local" id="dueDate" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="difficulty"><i class="fas fa-brain"></i> ความยาก (1-5)</label>
+                        <select id="difficulty" required>
+                            <option value="">เลือกระดับความยาก</option>
+                            <option value="1">1 - ง่ายมาก (งานซ้ำ)</option>
+                            <option value="2">2 - ง่าย (มี logic เล็กน้อย)</option>
+                            <option value="3">3 - ปานกลาง (ต้องคิด)</option>
+                            <option value="4">4 - ยาก (ซับซ้อน)</option>
+                            <option value="5">5 - ยากมาก (ไม่แน่นอน)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workload"><i class="fas fa-boxes"></i> ปริมาณงาน (1-5)</label>
+                        <select id="workload" required>
+                            <option value="">เลือกปริมาณงาน</option>
+                            <option value="1">1 - น้อยมาก</option>
+                            <option value="2">2 - น้อย</option>
+                            <option value="3">3 - ปานกลาง</option>
+                            <option value="4">4 - มาก</option>
+                            <option value="5">5 - มากมาก</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="risk"><i class="fas fa-exclamation-triangle"></i> ความเสี่ยง (1-5)</label>
+                        <select id="risk" required>
+                            <option value="">เลือกความเสี่ยง</option>
+                            <option value="1">1 - ไม่มีเสี่ยง</option>
+                            <option value="2">2 - เสี่ยงน้อย</option>
+                            <option value="3">3 - เสี่ยงปานกลาง</option>
+                            <option value="4">4 - เสี่ยงสูง</option>
+                            <option value="5">5 - เสี่ยงมาก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="subtasks-section">
+                    <label><i class="fas fa-list-check"></i> Sub-tasks (งานย่อย)</label>
+                    <div id="subtasksList"></div>
+                    <div class="subtask-input-group">
+                        <input type="text" id="subtaskInput" placeholder="เพิ่ม sub-task เช่น: ออกแบบ UI หน้า Login">
+                        <button type="button" class="btn-add-subtask" onclick="addSubtask()">
+                            <i class="fas fa-plus"></i> เพิ่ม
+                        </button>
+                    </div>
+                </div>
+
+                <div class="notification-section">
+                    <label><i class="fas fa-bell"></i> การแจ้งเตือน</label>
+                    <div class="notification-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify1Week" value="7">
+                            <span>แจ้งเตือนก่อน 1 สัปดาห์</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify3Days" value="3">
+                            <span>แจ้งเตือนก่อน 3 วัน</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify1Day" value="1" checked>
+                            <span>แจ้งเตือนก่อน 1 วัน</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify1Hour" value="0.042">
+                            <span>แจ้งเตือนก่อน 1 ชั่วโมง</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notifyOnTime" value="0">
+                            <span>แจ้งเตือนเมื่อถึงเวลา</span>
+                        </label>
+                    </div>
+                    <div class="notification-sound">
+                        <label for="notificationSound"><i class="fas fa-volume-up"></i> เสียงแจ้งเตือน</label>
+                        <select id="notificationSound">
+                            <option value="default">เสียงเริ่มต้น</option>
+                            <option value="bell">เสียงกระดิ่ง</option>
+                            <option value="chime">เสียงระฆัง</option>
+                            <option value="alert">เสียงเตือน</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="story-point-preview">
+                    <div class="preview-content">
+                        <div class="preview-main">
+                            <span>Story Point ที่คำนวณได้:</span>
+                            <span class="point-badge" id="previewPoint">-</span>
+                        </div>
+                        <div class="preview-formula" id="previewFormula"></div>
+                        <div class="preview-recommendation" id="previewRecommendation"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmitTask">
+                    <i class="fas fa-plus" id="btnSubmitIcon"></i> 
+                    <span id="btnSubmitText">เพิ่มงานหลัก</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-table"></i> รายการงานทั้งหมด</h2>
+                <div class="table-actions">
+                    <button class="btn-secondary" onclick="exportToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                    <button class="btn-danger" onclick="clearAll()">
+                        <i class="fas fa-trash"></i> ล้างทั้งหมด
+                    </button>
+                </div>
+            </div>
+
+            <div class="tasks-list" id="tasksList">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>ยังไม่มีงานในระบบ</p>
+                    <p class="empty-hint">เพิ่มงานแรกของคุณเพื่อเริ่มต้น</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</h2>
+            <p>เข้าสู่ระบบเพื่อซิงค์ข้อมูลกับ Firebase</p>
+            <div class="auth-buttons">
+                <button onclick="signInAnonymously()" class="btn-auth">
+                    <i class="fas fa-user-secret"></i> เข้าใช้แบบไม่ระบุตัวตน
+                </button>
+                <button onclick="signInWithGoogle()" class="btn-auth btn-google">
+                    <i class="fab fa-google"></i> เข้าสู่ระบบด้วย Google
+                </button>
+            </div>
+            <button onclick="closeLoginModal()" class="btn-close-modal">ปิด</button>
+        </div>
+    </div>
+
+    <!-- Notification Permission Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-bell"></i> เปิดใช้งานการแจ้งเตือน</h2>
+            <p>อนุญาตให้แอปส่งการแจ้งเตือนเมื่อถึงกำหนดงาน</p>
+            <div class="notification-status" id="notificationStatus"></div>
+            <div class="auth-buttons">
+                <button type="button" class="btn-auth" id="btnEnableNotification">
+                    <i class="fas fa-check"></i> อนุญาต
+                </button>
+                <button type="button" onclick="closeNotificationModal()" class="btn-close-modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/firebase-db.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/subtasks.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
