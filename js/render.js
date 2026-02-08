@@ -38,6 +38,9 @@ function renderTasks() {
         sharedTasksSection.style.display = 'block';
         sharedTasksCount.textContent = `${sharedTasks.length} งาน`;
     }
+    
+    // ✅ คืนสถานะการขยายหลัง re-render
+    restoreExpandedState();
 }
 
 function renderSingleTask(task, index, isShared = false) {
@@ -45,6 +48,9 @@ function renderSingleTask(task, index, isShared = false) {
     const totalSubtasks = task.subtasks.length;
     const progress = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks * 100).toFixed(0) : 0;
     const baseScore = task.difficulty + task.workload + task.risk;
+    
+    // ✅ สร้าง unique ID ที่ปลอดภัย (ไม่ซ้ำระหว่างงานของตัวเองกับงานที่แชร์มา)
+    const uniqueTaskId = `task-${task.id}-${task.owner || 'own'}`;
     
     const dueDateBadge = getDueDateBadge(task.dueDate);
     const notificationList = getNotificationList(task.notifications);
@@ -58,94 +64,119 @@ function renderSingleTask(task, index, isShared = false) {
     // Add shared task indicator
     const sharedIndicator = isShared ? '<div class="shared-task-badge"><i class="fas fa-share-alt"></i> งานที่แชร์ให้</div>' : '';
     
+    // ✅ สร้างข้อมูลสรุปสำหรับแสดงตอนหุบ
+    const notificationSummary = getNotificationSummary(task.notifications);
+    const collaboratorsSummary = getCollaboratorsSummary(task);
+    
     return `
-        <div class="task-card ${completedClass} ${isShared ? 'shared-task' : ''}">
-            <div class="task-header">
-                <div class="task-main-info">
+        <div class="task-card ${completedClass} ${isShared ? 'shared-task' : ''}" id="${uniqueTaskId}">
+            <!-- ✅ ส่วนหัวที่แสดงตลอด (คลิกเพื่อขยาย/หุบ) -->
+            <div class="task-header-compact" onclick="toggleTaskExpand('${uniqueTaskId}')">
+                <div class="task-compact-left">
                     <div class="task-id">#${index + 1}</div>
-                    <div class="task-title">${task.name}</div>
-                    ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
-                    ${completedBadge}
-                    ${sharedIndicator}
-                    ${taskBadge}
-                    ${dueDateBadge}
-                </div>
-                <div class="task-meta">
-                    <div class="task-point">${task.storyPoint}</div>
-                    <div class="task-assignee">
-                        <i class="fas fa-user"></i>
-                        ${task.assignee}
+                    <div class="task-title-compact">
+                        <div class="task-title">${task.name}</div>
+                        <div class="task-meta-compact">
+                            <span class="task-point-compact"><i class="fas fa-star"></i> ${task.storyPoint} pts</span>
+                            <span class="task-progress-compact"><i class="fas fa-tasks"></i> ${completedSubtasks}/${totalSubtasks}</span>
+                            ${notificationSummary}
+                            ${collaboratorsSummary}
+                        </div>
                     </div>
-                    ${task.visibility === 'shared' ? `
-                    <button class="btn-task-details" onclick="showTaskDetailModal(${task.id})" title="ดูรายละเอียดงาน">
-                        <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="task-compact-right">
+                    ${completedBadge}
+                    <button class="btn-expand-toggle" onclick="event.stopPropagation(); toggleTaskExpand('${uniqueTaskId}')">
+                        <i class="fas fa-chevron-down"></i>
                     </button>
-                    ` : ''}
                 </div>
             </div>
             
-            <div class="task-body">
-                <div class="task-stats">
-                    <div class="task-stat">
-                        <div class="task-stat-label">ความยาก</div>
-                        <div class="task-stat-value">${task.difficulty}/5</div>
+            <!-- ✅ ส่วนรายละเอียดที่ซ่อนไว้ (ค่าเริ่มต้นหุบ) -->
+            <div class="task-body-expandable" style="display: none;">
+                <div class="task-header">
+                    <div class="task-main-info">
+                        ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                        ${sharedIndicator}
+                        ${taskBadge}
+                        ${dueDateBadge}
                     </div>
-                    <div class="task-stat">
-                        <div class="task-stat-label">ปริมาณงาน</div>
-                        <div class="task-stat-value">${task.workload}/5</div>
-                    </div>
-                    <div class="task-stat">
-                        <div class="task-stat-label">ความเสี่ยง</div>
-                        <div class="task-stat-value">${task.risk}/5</div>
-                    </div>
-                </div>
-                
-                <div class="task-calculation">
-                    <div class="calc-label">📊 การคำนวณ Story Point:</div>
-                    <div class="calc-formula">
-                        (${task.difficulty} + ${task.workload} + ${task.risk}) × ${totalSubtasks} tasks 
-                        = ${baseScore} × ${totalSubtasks} 
-                        = ${baseScore * totalSubtasks} 
-                        → <strong>${task.storyPoint} points</strong> (Fibonacci)
-                    </div>
-                </div>
-                
-                ${collaborators}
-                
-                <div class="subtasks-list">
-                    <div class="subtasks-list-header">
-                        <i class="fas fa-list-check"></i>
-                        Sub-tasks (${completedSubtasks}/${totalSubtasks})
-                    </div>
-                    ${task.subtasks.map((subtask, index) => `
-                        <div class="subtask-checkbox-item ${subtask.completed ? 'completed' : ''} ${task.finalized === true && task.finalizedAt ? 'finalized' : ''} ${task.completed ? 'locked' : ''}" data-task-id="${task.id}" data-finalized="${task.finalized}">
-                            <input 
-                                type="checkbox" 
-                                ${subtask.completed ? 'checked' : ''} 
-                                ${task.finalized === true && task.finalizedAt ? 'disabled' : ''}
-                                ${task.completed ? 'disabled' : ''}
-                                onchange="toggleSubtask(${task.id}, ${index}, '${task.owner || ''}')"
-                                id="subtask-${task.id}-${task.owner || 'own'}-${index}"
-                            >
-                            <label for="subtask-${task.id}-${task.owner || 'own'}-${index}">${index + 1}. ${subtask.text}</label>
+                    <div class="task-meta">
+                        <div class="task-assignee">
+                            <i class="fas fa-user"></i>
+                            ${task.assignee}
                         </div>
-                    `).join('')}
-                </div>
-                
-                <div class="progress-bar-container">
-                    <div class="progress-label">
-                        <span>ความคืบหน้า</span>
-                        <span><strong>${progress}%</strong></span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%"></div>
+                        ${task.visibility === 'shared' ? `
+                        <button class="btn-task-details" onclick="showTaskDetailModal(${task.id})" title="ดูรายละเอียดงาน">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                        ` : ''}
                     </div>
                 </div>
                 
-                ${notificationList}
-                
-                <div class="task-actions">
-                    ${renderTaskActions(task, isShared)}
+                <div class="task-body">
+                    <div class="task-stats">
+                        <div class="task-stat">
+                            <div class="task-stat-label">ความยาก</div>
+                            <div class="task-stat-value">${task.difficulty}/5</div>
+                        </div>
+                        <div class="task-stat">
+                            <div class="task-stat-label">ปริมาณงาน</div>
+                            <div class="task-stat-value">${task.workload}/5</div>
+                        </div>
+                        <div class="task-stat">
+                            <div class="task-stat-label">ความเสี่ยง</div>
+                            <div class="task-stat-value">${task.risk}/5</div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-calculation">
+                        <div class="calc-label">📊 การคำนวณ Story Point:</div>
+                        <div class="calc-formula">
+                            (${task.difficulty} + ${task.workload} + ${task.risk}) × ${totalSubtasks} tasks 
+                            = ${baseScore} × ${totalSubtasks} 
+                            = ${baseScore * totalSubtasks} 
+                            → <strong>${task.storyPoint} points</strong> (Fibonacci)
+                        </div>
+                    </div>
+                    
+                    ${collaborators}
+                    
+                    <div class="subtasks-list">
+                        <div class="subtasks-list-header">
+                            <i class="fas fa-list-check"></i>
+                            Sub-tasks (${completedSubtasks}/${totalSubtasks})
+                        </div>
+                        ${task.subtasks.map((subtask, idx) => `
+                            <div class="subtask-checkbox-item ${subtask.completed ? 'completed' : ''} ${task.finalized === true && task.finalizedAt ? 'finalized' : ''} ${task.completed ? 'locked' : ''}" data-task-id="${task.id}" data-finalized="${task.finalized}">
+                                <input 
+                                    type="checkbox" 
+                                    ${subtask.completed ? 'checked' : ''} 
+                                    ${task.finalized === true && task.finalizedAt ? 'disabled' : ''}
+                                    ${task.completed ? 'disabled' : ''}
+                                    onchange="toggleSubtask(${task.id}, ${idx}, '${task.owner || ''}')"
+                                    id="subtask-${task.id}-${task.owner || 'own'}-${idx}"
+                                >
+                                <label for="subtask-${task.id}-${task.owner || 'own'}-${idx}">${idx + 1}. ${subtask.text}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>ความคืบหน้า</span>
+                            <span><strong>${progress}%</strong></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    
+                    ${notificationList}
+                    
+                    <div class="task-actions">
+                        ${renderTaskActions(task, isShared)}
+                    </div>
                 </div>
             </div>
         </div>
@@ -723,4 +754,107 @@ function formatRelativeTime(timestamp) {
             year: 'numeric'
         });
     }
+}
+
+// ==================== EXPAND/COLLAPSE HELPERS ====================
+
+/**
+ * สร้างข้อความสรุปการแจ้งเตือน (แสดงตอนหุบ)
+ */
+function getNotificationSummary(notifications) {
+    if (!notifications || notifications.length === 0) {
+        return '<span class="notification-summary"><i class="fas fa-bell-slash"></i> ไม่มีการเตือน</span>';
+    }
+    
+    const notifCount = notifications.length;
+    const notifTexts = notifications.map(n => {
+        if (n.days === 7) return '1 สัปดาห์';
+        if (n.days === 3) return '3 วัน';
+        if (n.days === 1) return '1 วัน';
+        if (n.days === 0.042) return '1 ชม.';
+        if (n.days === 0) return 'ตรงเวลา';
+        return `${n.days} วัน`;
+    }).join(', ');
+    
+    return `<span class="notification-summary" title="เตือนก่อน: ${notifTexts}"><i class="fas fa-bell"></i> ${notifCount} ครั้ง</span>`;
+}
+
+/**
+ * สร้างข้อความสรุปผู้ร่วมงาน (แสดงตอนหุบ)
+ */
+function getCollaboratorsSummary(task) {
+    const currentUserId = STATE.currentUser ? STATE.currentUser.uid : null;
+    
+    // ถ้าเป็นงานที่แชร์ให้เรา แสดงชื่อเจ้าของ
+    if (task.isSharedWithMe && task.owner !== currentUserId) {
+        const owner = STATE.friends ? STATE.friends.find(f => f.uid === task.owner) : null;
+        const ownerName = owner ? (owner.displayName || owner.email || 'ผู้ใช้') : 'ผู้ใช้';
+        return `<span class="collaborators-summary" title="เจ้าของงาน"><i class="fas fa-share-alt"></i> จาก ${ownerName}</span>`;
+    }
+    
+    // ถ้าเป็นงานของเราที่แชร์ให้คนอื่น
+    if (task.visibility === 'shared' && task.sharedWith && task.sharedWith.length > 0) {
+        const count = task.sharedWith.length;
+        return `<span class="collaborators-summary" title="แชร์ให้ ${count} คน"><i class="fas fa-users"></i> ${count} คน</span>`;
+    }
+    
+    // งานส่วนตัว
+    return '<span class="collaborators-summary"><i class="fas fa-lock"></i> ส่วนตัว</span>';
+}
+
+/**
+ * ฟังก์ชันสำหรับขยาย/หุบงาน
+ */
+function toggleTaskExpand(uniqueTaskId) {
+    const taskCard = document.getElementById(uniqueTaskId);
+    if (!taskCard) return;
+    
+    const expandableBody = taskCard.querySelector('.task-body-expandable');
+    const toggleBtn = taskCard.querySelector('.btn-expand-toggle i');
+    
+    if (!expandableBody || !toggleBtn) return;
+    
+    const isExpanded = expandableBody.style.display !== 'none';
+    
+    if (isExpanded) {
+        // หุบ
+        expandableBody.style.display = 'none';
+        toggleBtn.className = 'fas fa-chevron-down';
+        taskCard.classList.remove('task-expanded');
+        // ✅ ลบออกจาก Set
+        STATE.expandedTasks.delete(uniqueTaskId);
+    } else {
+        // ขยาย
+        expandableBody.style.display = 'block';
+        toggleBtn.className = 'fas fa-chevron-up';
+        taskCard.classList.add('task-expanded');
+        // ✅ เพิ่มเข้า Set
+        STATE.expandedTasks.add(uniqueTaskId);
+    }
+}
+
+/**
+ * ✅ คืนสถานะการขยายหลัง re-render
+ */
+function restoreExpandedState() {
+    // รอให้ DOM อัพเดตเสร็จก่อน
+    setTimeout(() => {
+        STATE.expandedTasks.forEach(uniqueTaskId => {
+            const taskCard = document.getElementById(uniqueTaskId);
+            if (!taskCard) {
+                // ถ้างานไม่มีแล้ว (ถูกลบ) ให้ลบออกจาก Set
+                STATE.expandedTasks.delete(uniqueTaskId);
+                return;
+            }
+            
+            const expandableBody = taskCard.querySelector('.task-body-expandable');
+            const toggleBtn = taskCard.querySelector('.btn-expand-toggle i');
+            
+            if (expandableBody && toggleBtn) {
+                expandableBody.style.display = 'block';
+                toggleBtn.className = 'fas fa-chevron-up';
+                taskCard.classList.add('task-expanded');
+            }
+        });
+    }, 0);
 }

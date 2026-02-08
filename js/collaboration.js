@@ -99,7 +99,8 @@ class CollaborationManager {
             throw new Error('Friend IDs must be a non-empty array');
         }
 
-        // Get current task to check existing sharedWith list
+        // ✅ Get current task to check existing sharedWith list
+        console.log(`🔍 Looking for task ${taskId} in Firebase...`);
         const taskDoc = await firebase.firestore()
             .collection('users')
             .doc(this.currentUser.uid)
@@ -108,7 +109,12 @@ class CollaborationManager {
             .get();
 
         if (!taskDoc.exists) {
-            throw new Error('Task not found');
+            console.error(`❌ Task ${taskId} not found in Firebase!`);
+            console.error('This usually happens when:');
+            console.error('1. Task was just created and not yet saved to Firebase');
+            console.error('2. Task ID is incorrect');
+            console.error('3. Task belongs to another user');
+            throw new Error('Task not found in Firebase. Please refresh the page and try again.');
         }
 
         const currentTask = taskDoc.data();

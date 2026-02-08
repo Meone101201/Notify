@@ -1,6 +1,6 @@
 // ==================== TASK MANAGEMENT ====================
 
-function handleTaskFormSubmit(e) {
+async function handleTaskFormSubmit(e) {
     e.preventDefault();
     
     const taskName = document.getElementById('taskName').value;
@@ -109,7 +109,8 @@ function handleTaskFormSubmit(e) {
         showNotification('เพิ่มงานหลักสำเร็จ!', 'success');
     }
     
-    saveTasksToFirebase();
+    // ✅ รอให้ save เสร็จก่อนที่จะ render
+    await saveTasksToFirebase();
     renderTasks();
     updateStats();
     
@@ -215,10 +216,16 @@ function editTask(taskId, ownerId = null) {
     const btnSubmit = document.getElementById('btnSubmitTask');
     const btnIcon = document.getElementById('btnSubmitIcon');
     const btnText = document.getElementById('btnSubmitText');
+    const btnCancel = document.getElementById('btnCancelEdit');
     
     btnSubmit.classList.add('btn-update');
     btnIcon.className = 'fas fa-sync-alt';
     btnText.textContent = 'อัปเดตงานหลัก';
+    
+    // ✅ แสดงปุ่มยกเลิก
+    if (btnCancel) {
+        btnCancel.style.display = 'inline-flex';
+    }
     
     // อัปเดต preview
     updatePreview();
@@ -237,10 +244,24 @@ function cancelEdit() {
     const btnSubmit = document.getElementById('btnSubmitTask');
     const btnIcon = document.getElementById('btnSubmitIcon');
     const btnText = document.getElementById('btnSubmitText');
+    const btnCancel = document.getElementById('btnCancelEdit');
     
     btnSubmit.classList.remove('btn-update');
     btnIcon.className = 'fas fa-plus';
     btnText.textContent = 'เพิ่มงานหลัก';
+    
+    // ✅ ซ่อนปุ่มยกเลิก
+    if (btnCancel) {
+        btnCancel.style.display = 'none';
+    }
+    
+    // ✅ ล้างฟอร์ม
+    document.getElementById('taskForm').reset();
+    STATE.tempSubtasks = [];
+    renderTempSubtasks();
+    updatePreview();
+    
+    showNotification('ยกเลิกการแก้ไขแล้ว', 'info');
 }
 
 function toggleTaskComplete(taskId, ownerId = null) {

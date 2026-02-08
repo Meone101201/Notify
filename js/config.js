@@ -39,7 +39,9 @@ const STATE = {
     userLevel: 0,
     userAchievements: [],
     // Notification UI state
-    initialNotificationsLoaded: false
+    initialNotificationsLoaded: false,
+    // ✅ Expand/Collapse state - เก็บว่างานไหนกำลังขยายอยู่
+    expandedTasks: new Set()
 };
 
 // Export

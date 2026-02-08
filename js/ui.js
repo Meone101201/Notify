@@ -484,6 +484,9 @@ async function handleShareTask() {
             window.collaborationManager.initialize(STATE.currentUser);
         }
         
+        // ✅ Show loading message
+        showNotification('กำลังแชร์งาน...', 'info');
+        
         // Share the task
         await window.collaborationManager.shareTask(currentSharingTaskId.toString(), selectedFriendIds);
         
@@ -507,12 +510,15 @@ async function handleShareTask() {
     } catch (error) {
         console.error('Error sharing task:', error);
         
-        if (error.message.includes('not in your friend list')) {
+        // ✅ Better error messages
+        if (error.message.includes('not found in Firebase')) {
+            showNotification('ไม่พบงานใน Firebase กรุณารีเฟรชหน้าเว็บแล้วลองใหม่', 'error');
+        } else if (error.message.includes('not in your friend list')) {
             showNotification('ไม่สามารถแชร์งานได้ เนื่องจากผู้ใช้บางคนไม่อยู่ในรายชื่อเพื่อนของคุณ กรุณาตรวจสอบรายชื่อเพื่อนอีกครั้ง', 'error');
         } else if (error.message.includes('already shared with this task')) {
             showNotification('เพื่อนที่เลือกได้รับการแชร์งานนี้ไปแล้ว', 'warning');
         } else {
-            showNotification('เกิดข้อผิดพลาดในการแชร์งาน', 'error');
+            showNotification('เกิดข้อผิดพลาดในการแชร์งาน: ' + error.message, 'error');
         }
     }
 }

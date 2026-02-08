@@ -244,10 +244,15 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit" id="btnSubmitTask">
-                    <i class="fas fa-plus" id="btnSubmitIcon"></i> 
-                    <span id="btnSubmitText">เพิ่มงานหลัก</span>
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="btnSubmitTask">
+                        <i class="fas fa-plus" id="btnSubmitIcon"></i> 
+                        <span id="btnSubmitText">เพิ่มงานหลัก</span>
+                    </button>
+                    <button type="button" class="btn-cancel" id="btnCancelEdit" style="display: none;" onclick="cancelEdit()">
+                        <i class="fas fa-times"></i> ยกเลิก
+                    </button>
+                </div>
             </form>
         </div>
 
