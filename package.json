@@ -1,0 +1,30 @@
+{
+  "name": "agile-task-board",
+  "version": "1.0.0",
+  "description": "Agile Task Board with Collaborative Tasks and Achievements",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:collaboration": "jest --testPathPattern=collaboration",
+    "test:sharing": "jest collaboration-01-task-sharing",
+    "test:comments": "jest collaboration-02-comments",
+    "test:subtasks": "jest collaboration-03-subtasks",
+    "test:permissions": "jest collaboration-04-permissions",
+    "test:finalization": "jest collaboration-05-finalization",
+    "test:properties": "jest --testPathPattern=properties",
+    "deploy": "firebase deploy",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "deploy:indexes": "firebase deploy --only firestore:indexes",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:all": "firebase deploy --only firestore:rules,firestore:indexes,hosting",
+    "emulator": "firebase emulators:start",
+    "emulator:firestore": "firebase emulators:start --only firestore"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "fast-check": "^3.15.0",
+    "@firebase/rules-unit-testing": "^3.0.0"
+  }
+}

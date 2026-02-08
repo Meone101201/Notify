@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agile Task Board - Story Point Estimation</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -14,6 +15,11 @@
 </head>
 <body>
     <div class="container">
+        <!-- Offline Indicator -->
+        <div id="offline-indicator" class="offline-indicator" style="display: none;">
+            <i class="fas fa-wifi-slash"></i> ออฟไลน์ - ข้อมูลจะถูกซิงค์เมื่อกลับมาออนไลน์
+        </div>
+        
         <header>
             <div class="header-content">
                 <div class="header-title">
@@ -28,8 +34,15 @@
                             <span class="user-email" id="userEmail">guest@example.com</span>
                         </div>
                     </div>
+                    <button class="btn-notification-bell" onclick="toggleNotificationsDropdown()" title="การแจ้งเตือน">
+                        <i class="fas fa-bell" id="notificationBellIcon"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="btn-dark-mode-toggle" id="darkModeToggle" title="Switch to Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
                     <button class="btn-notification-toggle" onclick="toggleNotificationSettings()" title="ตั้งค่าการแจ้งเตือน">
-                        <i class="fas fa-bell" id="notificationIcon"></i>
+                        <i class="fas fa-cog" id="notificationIcon"></i>
                     </button>
                     <button class="btn-logout" onclick="signOut()" title="ออกจากระบบ">
                         <i class="fas fa-sign-out-alt"></i>
@@ -42,6 +55,27 @@
                 </div>
             </div>
         </header>
+
+        <!-- Notifications Dropdown -->
+        <div class="notifications-dropdown" id="notificationsDropdown" style="display: none;">
+            <div class="notifications-dropdown-header">
+                <h3><i class="fas fa-bell"></i> การแจ้งเตือน</h3>
+                <button class="btn-mark-all-read" onclick="markAllNotificationsAsRead()">
+                    <i class="fas fa-check-double"></i> อ่านทั้งหมด
+                </button>
+            </div>
+            <div class="notifications-info">
+                <i class="fas fa-info-circle"></i>
+                <span>เก็บได้สูงสุด 10 รายการ • รายการเก่าสุดจะถูกลบอัตโนมัติ</span>
+            </div>
+            <div class="notifications-dropdown-body" id="notificationsDropdownBody">
+                <!-- Notifications will be populated here -->
+                <div class="notifications-empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>ไม่มีการแจ้งเตือน</p>
+                </div>
+            </div>
+        </div>
 
         <div class="stats-container">
             <div class="stat-card">
@@ -74,6 +108,24 @@
             </div>
         </div>
 
+        <!-- Navigation Menu -->
+        <div class="navigation-menu">
+            <button class="nav-btn nav-btn-active" id="navTasks" onclick="showTasksPage()">
+                <i class="fas fa-tasks"></i> งาน
+            </button>
+            <button class="nav-btn" id="navFriends" onclick="showFriendsPage()">
+                <i class="fas fa-user-friends"></i> เพื่อน
+            </button>
+            <button class="nav-btn" id="navAchievements" onclick="showAchievementsPage()">
+                <i class="fas fa-trophy"></i> อชีฟเมนต์
+            </button>
+            <button class="nav-btn" id="navLeaderboard" onclick="showLeaderboardPage()">
+                <i class="fas fa-medal"></i> อันดับ
+            </button>
+        </div>
+
+        <!-- Tasks Page -->
+        <div class="tasks-page" id="tasksPage">
         <div class="form-container">
             <h2><i class="fas fa-plus-circle"></i> เพิ่มงานหลัก (Epic/User Story)</h2>
             <form id="taskForm">
@@ -220,6 +272,189 @@
                 </div>
             </div>
         </div>
+
+        <!-- Shared Tasks Section -->
+        <div class="table-container" id="sharedTasksContainer" style="display: none;">
+            <div class="table-header">
+                <h2><i class="fas fa-share-alt"></i> งานที่แชร์ให้ฉัน</h2>
+                <div class="table-actions">
+                    <span class="shared-tasks-count" id="sharedTasksCount">0 งาน</span>
+                </div>
+            </div>
+
+            <div class="tasks-list" id="sharedTasksList">
+                <div class="empty-state">
+                    <i class="fas fa-share-alt"></i>
+                    <p>ยังไม่มีงานที่แชร์ให้คุณ</p>
+                    <p class="empty-hint">เมื่อเพื่อนแชร์งานให้ จะแสดงที่นี่</p>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Friends Page -->
+        <div class="friends-page" id="friendsPage" style="display: none;">
+            <div class="friends-header">
+                <h2><i class="fas fa-user-friends"></i> เพื่อน</h2>
+                <button class="btn-back" onclick="showTasksPage()">
+                    <i class="fas fa-arrow-left"></i> กลับไปหน้างาน
+                </button>
+            </div>
+
+            <!-- Add Friend Form -->
+            <div class="form-container">
+                <h3><i class="fas fa-user-plus"></i> เพิ่มเพื่อน</h3>
+                
+                <form id="friendRequestForm" class="friend-request-form">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="friendEmail"><i class="fas fa-envelope"></i> อีเมลของเพื่อน</label>
+                            <input type="email" id="friendEmail" placeholder="กรอกอีเมลของเพื่อนที่ต้องการเพิ่ม" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> ส่งคำขอเป็นเพื่อน
+                    </button>
+                </form>
+            </div>
+
+            <!-- Pending Friend Requests -->
+            <div class="pending-requests-container">
+                <h3><i class="fas fa-clock"></i> คำขอเป็นเพื่อนที่รอดำเนินการ</h3>
+                <div id="pendingRequestsList" class="pending-requests-list">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>ไม่มีคำขอเป็นเพื่อนที่รอดำเนินการ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends List -->
+            <div class="friends-list-container">
+                <h3><i class="fas fa-users"></i> รายชื่อเพื่อน</h3>
+                <div id="friendsList" class="friends-list">
+                    <div class="empty-state">
+                        <i class="fas fa-user-friends"></i>
+                        <p>ยังไม่มีเพื่อนในรายชื่อ</p>
+                        <p class="empty-hint">เพิ่มเพื่อนคนแรกของคุณเพื่อเริ่มต้น</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Page -->
+        <div class="achievements-page" id="achievementsPage" style="display: none;">
+            <div class="achievements-header">
+                <h2><i class="fas fa-trophy"></i> อชีฟเมนต์และคะแนน</h2>
+                <button class="btn-back" onclick="showTasksPage()">
+                    <i class="fas fa-arrow-left"></i> กลับไปหน้างาน
+                </button>
+            </div>
+
+            <!-- User Profile Card -->
+            <div class="user-profile-card">
+                <div class="user-profile-avatar-section">
+                    <img id="achievementsUserAvatar" class="achievements-user-avatar" src="" alt="User" />
+                    <div class="user-profile-info">
+                        <h3 id="achievementsUserName">User Name</h3>
+                        <p id="achievementsUserEmail">user@example.com</p>
+                    </div>
+                </div>
+                
+                <div class="user-points-level">
+                    <div class="points-display">
+                        <div class="points-icon"><i class="fas fa-star"></i></div>
+                        <div class="points-info">
+                            <div class="points-value" id="userPoints">0</div>
+                            <div class="points-label">คะแนนทั้งหมด</div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-display">
+                        <div class="level-icon"><i class="fas fa-crown"></i></div>
+                        <div class="level-info">
+                            <div class="level-value" id="userLevel">0</div>
+                            <div class="level-label">ระดับ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="level-progress-section">
+                    <div class="progress-header">
+                        <span>ความคืบหน้าไปยังระดับถัดไป</span>
+                        <span id="progressPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="levelProgressBar" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-footer">
+                        <span id="currentLevelPoints">0</span>
+                        <span id="nextLevelPoints">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Stats Cards -->
+            <div class="user-stats-section">
+                <h3><i class="fas fa-chart-bar"></i> สถิติของคุณ</h3>
+                <div class="user-stats-grid" id="userStatsGrid">
+                    <!-- Stats cards will be populated here -->
+                </div>
+            </div>
+
+            <!-- Achievements Grid -->
+            <div class="achievements-section">
+                <h3><i class="fas fa-trophy"></i> อชีฟเมนต์</h3>
+                <div class="achievements-grid" id="achievementsGrid">
+                    <!-- Achievement cards will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div class="leaderboard-page" id="leaderboardPage" style="display: none;">
+            <div class="leaderboard-header">
+                <h2><i class="fas fa-medal"></i> ตารางอันดับ</h2>
+                <button class="btn-back" onclick="showTasksPage()">
+                    <i class="fas fa-arrow-left"></i> กลับไปหน้างาน
+                </button>
+            </div>
+
+            <div class="leaderboard-description">
+                <p>เปรียบเทียบคะแนนและอันดับของคุณกับเพื่อน ๆ</p>
+            </div>
+
+            <!-- Leaderboard Table -->
+            <div class="leaderboard-container">
+                <div class="leaderboard-table-wrapper">
+                    <table class="leaderboard-table" id="leaderboardTable">
+                        <thead>
+                            <tr>
+                                <th class="col-rank">อันดับ</th>
+                                <th class="col-avatar"></th>
+                                <th class="col-name">ชื่อ</th>
+                                <th class="col-points">คะแนน</th>
+                                <th class="col-level">ระดับ</th>
+                                <th class="col-achievements">อชีฟเมนต์</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody">
+                            <!-- Leaderboard rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="leaderboardEmptyState" class="leaderboard-empty-state" style="display: none;">
+                    <i class="fas fa-user-friends"></i>
+                    <h3>ยังไม่มีเพื่อนในตารางอันดับ</h3>
+                    <p>เพิ่มเพื่อนเพื่อเริ่มแข่งขันและเปรียบเทียบคะแนน</p>
+                    <button class="btn-add-friends" onclick="showFriendsPage()">
+                        <i class="fas fa-user-plus"></i> เพิ่มเพื่อน
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Login Modal -->
@@ -228,9 +463,10 @@
             <h2><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</h2>
             <p>เข้าสู่ระบบเพื่อซิงค์ข้อมูลกับ Firebase</p>
             <div class="auth-buttons">
-                <button onclick="signInAnonymously()" class="btn-auth">
+                <!-- Anonymous Sign-in disabled -->
+                <!-- <button onclick="signInAnonymously()" class="btn-auth">
                     <i class="fas fa-user-secret"></i> เข้าใช้แบบไม่ระบุตัวตน
-                </button>
+                </button> -->
                 <button onclick="signInWithGoogle()" class="btn-auth btn-google">
                     <i class="fab fa-google"></i> เข้าสู่ระบบด้วย Google
                 </button>
@@ -254,13 +490,79 @@
         </div>
     </div>
 
+    <!-- Share Task Modal -->
+    <div id="shareTaskModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-share-alt"></i> แชร์งาน</h2>
+            <p>เลือกเพื่อนที่ต้องการแชร์งานนี้</p>
+            <div id="shareTaskFriendsList" class="share-friends-list">
+                <!-- Friend checkboxes will be populated here -->
+            </div>
+            <div class="auth-buttons">
+                <button type="button" class="btn-auth" id="btnShareTask">
+                    <i class="fas fa-share"></i> แชร์งาน
+                </button>
+                <button type="button" onclick="closeShareTaskModal()" class="btn-close-modal">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Detail Modal -->
+    <div id="taskDetailModal" class="modal">
+        <div class="modal-content modal-content-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-tasks"></i> รายละเอียดงาน</h2>
+                <button class="btn-close-modal-x" onclick="closeTaskDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="task-detail-body">
+                <!-- Task Details Section -->
+                <div class="task-detail-section">
+                    <h3><i class="fas fa-info-circle"></i> ข้อมูลงาน</h3>
+                    <div id="taskDetailInfo"></div>
+                </div>
+                
+                <!-- Collaborators Section -->
+                <div class="task-detail-section">
+                    <h3><i class="fas fa-user-friends"></i> ผู้ร่วมงาน</h3>
+                    <div id="taskDetailCollaborators"></div>
+                </div>
+                
+                <!-- Comments Section -->
+                <div class="task-detail-section">
+                    <h3><i class="fas fa-comments"></i> ความคิดเห็น</h3>
+                    <div id="taskDetailComments" class="comments-container">
+                        <!-- Comments will be populated here -->
+                    </div>
+                    <div class="comment-input-section">
+                        <input type="text" id="commentInput" placeholder="เพิ่มความคิดเห็น..." />
+                        <button class="btn-add-comment" onclick="handleAddComment()">
+                            <i class="fas fa-paper-plane"></i> ส่ง
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase Configuration -->
     <script src="firebase-config.js"></script>
     
     <!-- Application Scripts -->
     <script src="js/config.js"></script>
+    <script src="js/dark-mode.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script src="js/data-cleanup.js"></script>
+    <script src="js/performance-monitor.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/firebase-db.js"></script>
+    <script src="js/points.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/friends.js"></script>
+    <script src="js/collaboration.js"></script>
+    <script src="js/leaderboard.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/calculations.js"></script>
     <script src="js/subtasks.js"></script>
@@ -269,5 +571,8 @@
     <script src="js/export.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
+    
+    <!-- Cleanup utility (temporary - for fixing finalized field) -->
+    <script src="js/finalized-field-cleanup.js"></script>
 </body>
 </html>

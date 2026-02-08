@@ -1,5 +1,16 @@
 // Firebase Configuration
 // ✅ Configuration สำหรับ Agile Task Board
+// 
+// ⚠️ สำคัญ: ไฟล์นี้เชื่อมกับ PRODUCTION DATABASE (ข้อมูลจริง!)
+// - Project ID: agile-task-board
+// - URL: agile-task-board.firebaseapp.com
+// - ใช้สำหรับ: แอปพลิเคชันจริง, การ deploy
+// 
+// สำหรับการทดสอบ:
+// - Integration Tests → ใช้ Firebase Emulator (localhost:8080)
+// - Unit Tests → ใช้ Mocks (ไม่เชื่อมจริง)
+// 
+// ดูเพิ่มเติม: FIREBASE_CONNECTIONS.md
 const firebaseConfig = {
     apiKey: "AIzaSyBJzO5-G3bnCX4iIaKotuzGQ9bIc3hLfmw",
     authDomain: "agile-task-board.firebaseapp.com",
@@ -18,6 +29,15 @@ function initializeFirebase() {
         app = firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
         auth = firebase.auth();
+        
+        // 🔧 เชื่อมต่อกับ Emulator (สำหรับทดสอบ)
+        // ⚠️ ปิดการใช้งาน Emulator เพื่อใช้ Production Database
+        // if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        //     console.log('🔧 Connecting to Firebase Emulator...');
+        //     db.useEmulator('localhost', 8080);
+        //     auth.useEmulator('http://localhost:9099');
+        // }
+        
         console.log('✅ Firebase initialized successfully');
         return true;
     } catch (error) {

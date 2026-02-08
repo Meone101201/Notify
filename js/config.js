@@ -26,7 +26,20 @@ const STATE = {
     notificationPermission: false,
     notificationCheckInterval: null,
     editingTaskId: null,
-    activeSoundTimers: []
+    activeSoundTimers: [],
+    // Collaboration features
+    friends: [],
+    pendingRequests: [],
+    achievements: [],
+    userStats: {},
+    notifications: [],
+    leaderboard: [],
+    // User achievements data
+    userPoints: 0,
+    userLevel: 0,
+    userAchievements: [],
+    // Notification UI state
+    initialNotificationsLoaded: false
 };
 
 // Export

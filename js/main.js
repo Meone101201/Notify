@@ -6,6 +6,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize Firebase
     initializeFirebase();
     
+    // Initialize network monitoring and offline persistence
+    if (typeof initializeNetworkMonitoring !== 'undefined') {
+        initializeNetworkMonitoring();
+        console.log('✅ Network monitoring initialized');
+    }
+    
+    if (typeof enableFirebaseOfflinePersistence !== 'undefined') {
+        enableFirebaseOfflinePersistence();
+    }
+    
+    // Initialize performance monitoring
+    if (typeof initializePerformanceMonitoring !== 'undefined') {
+        initializePerformanceMonitoring();
+    }
+    
+    // Initialize FriendManager
+    if (typeof FriendManager !== 'undefined') {
+        window.friendManager = new FriendManager();
+        console.log('✅ FriendManager initialized');
+    }
+    
     // Check authentication state
     checkAuthState();
     
@@ -16,6 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
     renderTempSubtasks();
     addAnimationStyles();
     initializeEventListeners();
+    initializeFriendsEventListeners();
+    initializeShareTaskEventListeners();
+    initializeCommentInputListener();
     
     // Start notification checker
     startNotificationChecker();

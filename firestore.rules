@@ -1,0 +1,115 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isFriend(userId) {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(userId)) &&
+             request.auth.uid in get(/databases/$(database)/documents/users/$(userId)).data.friends;
+    }
+    
+    function isTaskOwner(taskData) {
+      return isAuthenticated() && request.auth.uid == taskData.owner;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // ✅ Allow authenticated users to read any user document (for friend search)
+      allow read: if isAuthenticated();
+      
+      // ✅ Users can create their own document (for initial signup)
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // ✅ Users can update their own data OR when adding/removing friends OR when receiving points/stats from task finalization
+      allow update: if isOwner(userId) || 
+                       (isAuthenticated() && 
+                        // Allow updating friends, friendRequests, and updatedAt only
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['friends', 'friendRequests', 'updatedAt'])) ||
+                       (isAuthenticated() &&
+                        // Allow updating points, level, stats, achievements, achievementNotifications, and updatedAt when finalizing tasks (from task owner who is a friend)
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['points', 'level', 'stats', 'achievements', 'achievementNotifications', 'updatedAt']) &&
+                        // Verify the requester is a friend (task owner)
+                        request.auth.uid in resource.data.friends);
+      
+      // ✅ Users can delete their own data
+      allow delete: if isOwner(userId);
+      
+      // Tasks subcollection
+      match /tasks/{taskId} {
+        // Users can read tasks they own or tasks shared with them
+        allow read: if isOwner(userId) || 
+                       (isAuthenticated() && 
+                        resource.data.keys().hasAll(['sharedWith']) &&
+                        request.auth.uid in resource.data.sharedWith);
+        
+        // Users can create tasks in their own collection
+        allow create: if isOwner(userId);
+        
+        // Users can update tasks they own or tasks shared with them
+        // Task owner can finalize tasks (update finalized, finalizedAt, finalizedBy, pointsAwarded)
+        allow update: if isOwner(userId) || 
+                         (isAuthenticated() && 
+                          resource.data.keys().hasAll(['sharedWith']) &&
+                          request.auth.uid in resource.data.sharedWith) ||
+                         (isTaskOwner(resource.data) &&
+                          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['finalized', 'finalizedAt', 'finalizedBy', 'pointsAwarded']));
+        
+        // Only owners can delete tasks
+        allow delete: if isOwner(userId) && 
+                         request.auth.uid == resource.data.owner;
+      }
+      
+      // Notifications subcollection
+      match /notifications/{notificationId} {
+        // ✅ Owner can read/write, others can create (for friend notifications)
+        allow read, delete: if isOwner(userId);
+        allow create: if isAuthenticated();
+        allow update: if isOwner(userId);
+      }
+    }
+    
+    // ✅ Collection group query for tasks shared with user
+    match /{path=**}/tasks/{taskId} {
+      allow read: if isAuthenticated() && 
+                     (request.auth.uid == resource.data.owner ||
+                      (resource.data.keys().hasAll(['sharedWith']) && 
+                       request.auth.uid in resource.data.sharedWith));
+    }
+    
+    // Friend requests collection
+    match /friendRequests/{requestId} {
+      // Users can read requests they sent or received
+      allow read: if isAuthenticated() && 
+                     (request.auth.uid == resource.data.from || 
+                      request.auth.uid == resource.data.to);
+      
+      // Users can create requests
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.from;
+      
+      // Users can update requests they received
+      allow update: if isAuthenticated() && 
+                       request.auth.uid == resource.data.to;
+      
+      // Users can delete requests they sent or received
+      allow delete: if isAuthenticated() && 
+                       (request.auth.uid == resource.data.from || 
+                        request.auth.uid == resource.data.to);
+    }
+    
+    // Achievements collection (read-only for all authenticated users)
+    match /achievements/{achievementId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only admins can write (via Firebase Console)
+    }
+  }
+}

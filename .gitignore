@@ -1,0 +1,119 @@
+# ==================== PRODUCTION CODE ONLY ====================
+# This .gitignore includes only production code
+# Tests, backups, and setup files are excluded
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# IDE & Editor
+.vscode/
+.idea/
+.kiro/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Build Output
+dist/
+build/
+.cache/
+
+# ==================== EXCLUDE TESTS ====================
+# Test files and directories
+tests/
+test/
+__tests__/
+*.test.js
+*.spec.js
+*.test.ts
+*.spec.ts
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Test configuration
+jest.config.js
+jest.config.ts
+.jestrc
+.jestrc.json
+
+# Test results
+test-results.txt
+test-results-*.txt
+
+# ==================== EXCLUDE BACKUPS ====================
+# Backup directories
+backup/
+backups/
+_backup/
+*.backup
+*.bak
+*.old
+
+# Archive directories
+_archive/
+archive/
+old/
+
+# ==================== EXCLUDE SETUP & DOCS ====================
+# Setup and configuration docs (keep only essential docs)
+SETUP.md
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Test documentation
+tests/README.md
+tests/TEST_SUMMARY.md
+tests/QUICK_START.md
+tests/DELIVERY_REPORT.md
+FAILED_TESTS_ANALYSIS.md
+COLLABORATION_TESTS_COMPLETE.md
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# ==================== KEEP ESSENTIAL FILES ====================
+# These files WILL be included in git:
+# - index.html
+# - style.css
+# - js/*.js (all JavaScript files)
+# - firebase-config.js
+# - firestore.rules
+# - firestore.indexes.json
+# - firebase.json
+# - package.json
+# - README.md
+# - USER_GUIDE.md
+# - deploy.sh
+# - deploy.bat
