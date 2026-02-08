@@ -2550,10 +2550,22 @@ td {
 /* Responsive Design */
 
 @media (max-width: 768px) {
+    /* ✅ Friends Header - 1 column 2 rows */
     .friends-header {
         flex-direction: column;
+        align-items: stretch;
         gap: 15px;
-        text-align: center;
+        padding: 15px;
+    }
+    
+    .friends-header h2 {
+        font-size: 1.3rem;
+        text-align: left;
+    }
+    
+    .friends-header .btn-back {
+        width: 100%;
+        justify-content: center;
     }
     
     .friends-list {
@@ -3472,6 +3484,25 @@ td {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* ✅ Achievements Header - 1 column 2 rows */
+    .achievements-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .achievements-header h2 {
+        font-size: 1.3rem;
+        justify-content: flex-start;
+        text-align: left;
+    }
+    
+    .achievements-header .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+    
     .user-points-level {
         grid-template-columns: 1fr;
     }
@@ -3763,21 +3794,30 @@ td {
 
 /* Responsive Design for Leaderboard */
 @media (max-width: 768px) {
+    /* ✅ Leaderboard Header - 1 column 2 rows */
+    .leaderboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .leaderboard-header h2 {
+        font-size: 1.3rem;
+        text-align: left;
+    }
+    
+    .leaderboard-header .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+    
     .leaderboard-table-wrapper {
         overflow-x: auto;
     }
     
     .leaderboard-table {
         min-width: 600px;
-    }
-    
-    .leaderboard-header {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .leaderboard-header h2 {
-        font-size: 1.5rem;
     }
     
     .leaderboard-table th,
@@ -4511,4 +4551,702 @@ td {
 
 [data-theme="dark"] .btn-expand-toggle:hover {
     background: rgba(255, 255, 255, 0.25);
+}
+
+/* ==================== MOBILE RESPONSIVE IMPROVEMENTS ==================== */
+
+@media (max-width: 768px) {
+    /* ✅ 1. Header & Profile Section */
+    header {
+        padding: 15px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .header-title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .header-title .subtitle {
+        font-size: 0.85rem;
+    }
+    
+    /* User Profile - 2 rows x 4 columns layout on mobile */
+    .user-profile {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .profile-info {
+        width: 100%;
+        justify-content: center;
+        order: -1; /* แสดงก่อนปุ่มทั้งหมด */
+    }
+    
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .profile-details {
+        font-size: 0.85rem;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .user-email {
+        font-size: 0.75rem;
+    }
+    
+    /* Profile Buttons - 2 rows x 4 columns grid */
+    .user-profile > button {
+        flex: 0 0 calc(25% - 8px); /* 4 columns with gap */
+        padding: 0;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-notification-bell,
+    .btn-dark-mode-toggle,
+    .btn-notification-toggle,
+    .btn-logout {
+        width: 100%;
+        min-width: unset;
+        height: 50px;
+        border-radius: 12px;
+    }
+    
+    .btn-notification-bell i,
+    .btn-dark-mode-toggle i,
+    .btn-notification-toggle i,
+    .btn-logout i {
+        font-size: 1.2rem;
+    }
+    
+    /* ✅ 2. Stats Container */
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-card i {
+        font-size: 1.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.3rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+    
+    /* ✅ 3. Navigation Menu */
+    .navigation-menu {
+        padding: 10px;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .nav-btn {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        min-width: fit-content;
+    }
+    
+    .nav-btn i {
+        font-size: 1rem;
+    }
+    
+    /* ✅ 4. Form Container */
+    .form-container {
+        padding: 20px 15px;
+    }
+    
+    .form-container h2 {
+        font-size: 1.3rem;
+    }
+    
+    /* Form Row - Stack on mobile */
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-group {
+        width: 100%;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
+    
+    /* ✅ 5. Subtasks Section - KEY IMPROVEMENT */
+    .subtasks-section {
+        padding: 15px;
+    }
+    
+    .subtasks-section label {
+        font-size: 1rem;
+    }
+    
+    /* Subtask Input Group - Stack on mobile */
+    .subtask-input-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .subtask-input-group input {
+        width: 100%;
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+    
+    .btn-add-subtask {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        justify-content: center;
+    }
+    
+    /* Subtask List Items */
+    #subtasksList .subtask-item {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-remove-subtask {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+    
+    /* ✅ 6. Notification Options */
+    .notification-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .checkbox-label {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+    
+    /* ✅ 7. Story Point Preview */
+    .story-point-preview {
+        padding: 15px;
+    }
+    
+    .preview-main {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .point-badge {
+        font-size: 2rem;
+    }
+    
+    .preview-formula {
+        font-size: 0.85rem;
+    }
+    
+    /* ✅ 8. Form Actions */
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-actions .btn-submit,
+    .form-actions .btn-cancel {
+        width: 100%;
+    }
+    
+    /* ✅ 9. Task Cards - COMPACT VIEW */
+    .task-card {
+        margin-bottom: 15px;
+    }
+    
+    /* Task Header Compact */
+    .task-header-compact {
+        padding: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .task-compact-left {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .task-id {
+        font-size: 0.8rem;
+    }
+    
+    .task-title-compact .task-title {
+        font-size: 1rem;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+    
+    .task-meta-compact {
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 0.75rem;
+    }
+    
+    .task-meta-compact span {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .task-compact-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .completed-badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .btn-expand-toggle {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* ✅ 10. Task Body Expandable */
+    .task-body-expandable .task-header {
+        flex-direction: column;
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .task-main-info {
+        width: 100%;
+    }
+    
+    .task-title {
+        font-size: 1.1rem;
+    }
+    
+    .task-description {
+        font-size: 0.85rem;
+    }
+    
+    .task-meta {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .task-point {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+    
+    .task-assignee {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+    }
+    
+    /* Task Body */
+    .task-body {
+        padding: 15px;
+    }
+    
+    /* Task Stats - 3 columns on mobile */
+    .task-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .task-stat-label {
+        font-size: 0.75rem;
+    }
+    
+    .task-stat-value {
+        font-size: 1.1rem;
+    }
+    
+    /* Task Calculation */
+    .task-calculation {
+        padding: 10px;
+    }
+    
+    .calc-label {
+        font-size: 0.85rem;
+    }
+    
+    .calc-formula {
+        font-size: 0.8rem;
+    }
+    
+    /* Collaborators Section */
+    .collaborators-section {
+        padding: 10px;
+    }
+    
+    .collaborators-list {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .collaborators-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .collaborators-label {
+        font-size: 0.85rem;
+    }
+    
+    .collaborator-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .last-modified-info {
+        font-size: 0.75rem;
+    }
+    
+    /* Subtasks List */
+    .subtasks-list {
+        padding: 10px;
+    }
+    
+    .subtasks-list-header {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    .subtask-checkbox-item {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+    
+    .subtask-checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+    
+    /* Progress Bar */
+    .progress-bar-container {
+        margin: 10px 0;
+    }
+    
+    .progress-label {
+        font-size: 0.85rem;
+    }
+    
+    /* Notification Info */
+    .notification-info {
+        padding: 10px;
+    }
+    
+    .notification-info-header {
+        font-size: 0.85rem;
+    }
+    
+    .notification-info-list {
+        gap: 6px;
+    }
+    
+    .notification-info-badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    
+    /* ✅ 11. Task Actions - Stack on mobile */
+    .task-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-task-action {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+        justify-content: center;
+    }
+    
+    /* Task Badges */
+    .task-badge {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+    }
+    
+    .shared-task-badge {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+    
+    .due-date-badge {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+    
+    /* ✅ 12. Table Container */
+    .table-container {
+        padding: 15px;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .table-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .table-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .table-actions button {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ 13. Empty State */
+    .empty-state {
+        padding: 30px 15px;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+    }
+    
+    .empty-state p {
+        font-size: 1rem;
+    }
+    
+    .empty-hint {
+        font-size: 0.85rem;
+    }
+    
+    /* ✅ 14. Modals */
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.3rem;
+    }
+    
+    .modal-content p {
+        font-size: 0.9rem;
+    }
+    
+    .auth-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-auth {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    /* ✅ 15. Share Task Modal */
+    .share-friends-list {
+        max-height: 300px;
+    }
+    
+    .share-friend-item {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .share-friend-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .share-friend-name {
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ 16. Notifications Dropdown */
+    .notifications-dropdown {
+        width: 95%;
+        max-width: 95%;
+        right: 2.5%;
+        left: 2.5%;
+        top: 80px;
+    }
+    
+    .notifications-dropdown-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .btn-mark-all-read {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+    
+    .notification-item {
+        padding: 12px;
+    }
+    
+    .notification-item-title {
+        font-size: 0.9rem;
+    }
+    
+    .notification-item-message {
+        font-size: 0.8rem;
+    }
+    
+    .notification-item-time {
+        font-size: 0.75rem;
+    }
+    
+    /* ✅ 17. Container */
+    .container {
+        max-width: 100%;
+        padding: 10px;
+    }
+    
+    /* ✅ 18. Reduce animations on mobile for better performance */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ==================== EXTRA SMALL DEVICES (< 480px) ==================== */
+
+@media (max-width: 480px) {
+    /* Further optimizations for very small screens */
+    
+    .header-title h1 {
+        font-size: 1.3rem;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .task-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .task-stat-value {
+        font-size: 1rem;
+    }
+    
+    .task-meta-compact {
+        font-size: 0.7rem;
+    }
+    
+    .task-meta-compact span {
+        padding: 3px 6px;
+    }
+    
+    .btn-expand-toggle {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .form-container,
+    .table-container {
+        padding: 12px;
+    }
+}
+
+/* ==================== PROFILE BUTTONS EXTRA SMALL SCREENS ==================== */
+
+@media (max-width: 480px) {
+    /* ปรับให้ปุ่มเล็กลงเล็กน้อยบนหน้าจอเล็กมาก */
+    .user-profile > button {
+        flex: 0 0 calc(25% - 6px);
+        height: 45px;
+    }
+    
+    .btn-notification-bell i,
+    .btn-dark-mode-toggle i,
+    .btn-notification-toggle i,
+    .btn-logout i {
+        font-size: 1.1rem;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .profile-info {
+        margin-bottom: 5px;
+    }
+}
+
+/* ==================== PROFILE BUTTONS VERY SMALL SCREENS ==================== */
+
+@media (max-width: 360px) {
+    /* สำหรับหน้าจอเล็กมากๆ (เช่น iPhone SE) */
+    .user-profile {
+        padding: 12px;
+        gap: 8px;
+    }
+    
+    .user-profile > button {
+        flex: 0 0 calc(25% - 6px);
+        height: 42px;
+    }
+    
+    .btn-notification-bell i,
+    .btn-dark-mode-toggle i,
+    .btn-notification-toggle i,
+    .btn-logout i {
+        font-size: 1rem;
+    }
+    
+    .user-name {
+        font-size: 0.85rem;
+    }
+    
+    .user-email {
+        font-size: 0.7rem;
+    }
 }
