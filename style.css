@@ -2572,6 +2572,46 @@ td {
         grid-template-columns: 1fr;
     }
     
+    /* ✅ Friend Card - Stack on mobile */
+    .friend-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .friend-info {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .friend-avatar {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+    }
+    
+    .friend-details {
+        flex: 1;
+        min-width: 0; /* Allow text to wrap */
+    }
+    
+    .friend-name {
+        font-size: 0.95rem;
+        word-break: break-word;
+    }
+    
+    .friend-email {
+        font-size: 0.8rem;
+        word-break: break-all;
+    }
+    
+    .btn-remove-friend {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+    }
+    
     .request-card {
         flex-direction: column;
         gap: 15px;
