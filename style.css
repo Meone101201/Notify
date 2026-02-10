@@ -4,6 +4,17 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+}
+
 :root {
     --primary: #4f46e5;
     --primary-dark: #4338ca;
@@ -101,8 +112,9 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     position: relative;
-    min-height: fit-content; /* ให้ขยายตามเนื้อหา */
-    overflow: visible; /* ให้เนื้อหาแสดงได้เต็มที่ */
+    min-height: fit-content;
+    overflow: visible;
+    width: 100%;
 }
 
 /* Offline Indicator */
@@ -4608,9 +4620,28 @@ td {
 /* ==================== MOBILE RESPONSIVE IMPROVEMENTS ==================== */
 
 @media (max-width: 768px) {
+    /* ป้องกัน horizontal scroll */
+    body {
+        padding: 0;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+        padding: 0;
+    }
+    
     /* ✅ 1. Header & Profile Section */
     header {
         padding: 15px;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
     
     .header-content {
@@ -5456,6 +5487,16 @@ td {
     /* ลบ padding ของ body */
     body {
         padding: 0;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+    
+    /* Container */
+    .container {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
     
     /* ซ่อน user-profile ใน header บนมือถือ */
