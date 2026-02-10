@@ -4626,42 +4626,42 @@ td {
         font-size: 0.85rem;
     }
     
-    /* User Profile - 2 rows x 4 columns layout on mobile */
+    /* User Profile - 2 rows: ชื่อบนสุด, 4 ปุ่มแถวล่าง */
     .user-profile {
         width: 100%;
-        flex-wrap: wrap;
+        flex-wrap: wrap; /* ✅ ให้ขึ้นบรรทัดใหม่ได้ */
         justify-content: center;
         gap: 10px;
-        padding: 15px;
-        border-radius: 15px; /* ✅ ลดเหลือ 15px */
+        padding: 12px;
+        border-radius: 15px;
     }
     
     .profile-info {
-        width: 100%;
+        width: 100%; /* ✅ ให้ชื่อเต็มแถว */
         justify-content: center;
         order: -1; /* แสดงก่อนปุ่มทั้งหมด */
     }
     
     .user-avatar {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
     }
     
     .profile-details {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
     
     .user-name {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .user-email {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
     
-    /* Profile Buttons - 2 rows x 4 columns grid */
+    /* Profile Buttons - 4 ปุ่มในแถวเดียว (ไม่ขึ้นบรรทัดใหม่) */
     .user-profile > button {
-        flex: 0 0 calc(25% - 8px); /* 4 columns with gap */
+        flex: 0 0 auto; /* ✅ ไม่ให้ขยายหรือหดตัว */
         padding: 0;
         font-size: 0.9rem;
         display: flex;
@@ -4673,28 +4673,30 @@ td {
     .btn-dark-mode-toggle,
     .btn-notification-toggle,
     .btn-logout {
-        width: 100%;
+        width: 45px;
+        height: 45px;
         min-width: unset;
-        height: 50px;
-        border-radius: 10px; /* ✅ ลดความมนจาก 50% (วงกลม) */
+        border-radius: 10px;
     }
     
     .btn-notification-bell i,
     .btn-dark-mode-toggle i,
     .btn-notification-toggle i,
     .btn-logout i {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
-    /* ✅ 2. Stats Container */
+    /* ✅ 2. Stats Container - 2 คอลัมน์ */
     .stats-container {
-        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* ✅ 2 คอลัมน์ */
         gap: 10px;
-        padding: 15px;
+        padding: 10px;
     }
     
     .stat-card {
-        padding: 12px;
+        padding: 15px 12px;
+        min-width: unset;
     }
     
     .stat-card i {
@@ -4702,11 +4704,11 @@ td {
     }
     
     .stat-value {
-        font-size: 1.3rem;
+        font-size: 1.6rem;
     }
     
     .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
     
     /* ✅ 3. Navigation Menu */
@@ -4730,11 +4732,18 @@ td {
     
     /* ✅ 4. Form Container */
     .form-container {
-        padding: 20px 15px;
+        padding: 15px 12px; /* ✅ ลด padding */
+        margin-bottom: 15px; /* ✅ ลด margin */
     }
     
     .form-container h2 {
-        font-size: 1.3rem;
+        font-size: 1.2rem; /* ✅ ลดขนาดหัวข้อ */
+        margin-bottom: 15px;
+    }
+    
+    .form-container h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
     }
     
     /* Form Row - Stack on mobile */
@@ -4840,15 +4849,15 @@ td {
     
     /* ✅ 9. Task Cards - COMPACT VIEW */
     .task-card {
-        margin-bottom: 15px;
+        margin-bottom: 12px; /* ✅ ลด margin */
     }
     
     /* Task Header Compact */
     .task-header-compact {
-        padding: 12px;
+        padding: 10px 12px; /* ✅ ลด padding */
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 8px;
     }
     
     .task-compact-left {
@@ -4897,8 +4906,8 @@ td {
     /* ✅ 10. Task Body Expandable */
     .task-body-expandable .task-header {
         flex-direction: column;
-        padding: 15px;
-        gap: 10px;
+        padding: 12px; /* ✅ ลด padding */
+        gap: 8px;
     }
     
     .task-main-info {
@@ -4906,7 +4915,7 @@ td {
     }
     
     .task-title {
-        font-size: 1.1rem;
+        font-size: 1.05rem; /* ✅ ลดขนาด */
     }
     
     .task-description {
@@ -4921,18 +4930,18 @@ td {
     }
     
     .task-point {
-        font-size: 1.2rem;
-        padding: 8px 16px;
+        font-size: 1.1rem; /* ✅ ลดขนาด */
+        padding: 6px 14px; /* ✅ ลด padding */
     }
     
     .task-assignee {
-        font-size: 0.85rem;
-        padding: 6px 10px;
+        font-size: 0.8rem; /* ✅ ลดขนาด */
+        padding: 5px 10px; /* ✅ ลด padding */
     }
     
     /* Task Body */
     .task-body {
-        padding: 15px;
+        padding: 12px; /* ✅ ลด padding */
     }
     
     /* Task Stats - 3 columns on mobile */
@@ -5097,17 +5106,19 @@ td {
     
     /* ✅ 12. Table Container */
     .table-container {
-        padding: 15px;
+        padding: 15px 12px; /* ✅ ลด padding */
+        margin-bottom: 15px; /* ✅ ลด margin */
     }
     
     .table-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+        margin-bottom: 15px; /* ✅ ลด margin */
     }
     
     .table-header h2 {
-        font-size: 1.2rem;
+        font-size: 1.2rem; /* ✅ ลดขนาดหัวข้อ */
     }
     
     .table-actions {
@@ -5278,38 +5289,14 @@ td {
 @media (max-width: 480px) {
     /* ปรับให้ปุ่มเล็กลงเล็กน้อยบนหน้าจอเล็กมาก */
     .user-profile > button {
-        flex: 0 0 calc(25% - 6px);
-        height: 45px;
+        flex: 0 0 auto; /* ✅ ใช้ขนาดคงที่ ไม่ขึ้นบรรทัดใหม่ */
     }
     
-    .btn-notification-bell i,
-    .btn-dark-mode-toggle i,
-    .btn-notification-toggle i,
-    .btn-logout i {
-        font-size: 1.1rem;
-    }
-    
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .profile-info {
-        margin-bottom: 5px;
-    }
-}
-
-/* ==================== PROFILE BUTTONS VERY SMALL SCREENS ==================== */
-
-@media (max-width: 360px) {
-    /* สำหรับหน้าจอเล็กมากๆ (เช่น iPhone SE) */
-    .user-profile {
-        padding: 12px;
-        gap: 8px;
-    }
-    
-    .user-profile > button {
-        flex: 0 0 calc(25% - 6px);
+    .btn-notification-bell,
+    .btn-dark-mode-toggle,
+    .btn-notification-toggle,
+    .btn-logout {
+        width: 42px; /* ✅ ลดขนาดปุ่มให้พอดี 4 ปุ่มในแถวเดียว */
         height: 42px;
     }
     
@@ -5320,11 +5307,341 @@ td {
         font-size: 1rem;
     }
     
+    .user-avatar {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .profile-info {
+        margin-bottom: 5px;
+    }
+    
+    .user-profile {
+        gap: 15px; /* ✅ ลด gap ให้พอดี */
+        padding: 10px;
+    }
+}
+
+/* ==================== PROFILE BUTTONS VERY SMALL SCREENS ==================== */
+
+@media (max-width: 360px) {
+    /* สำหรับหน้าจอเล็กมากๆ (เช่น iPhone SE) */
+    .user-profile {
+        padding: 10px;
+        gap: 6px;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .btn-notification-bell,
+    .btn-dark-mode-toggle,
+    .btn-notification-toggle,
+    .btn-logout {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .btn-notification-bell i,
+    .btn-dark-mode-toggle i,
+    .btn-notification-toggle i,
+    .btn-logout i {
+        font-size: 1rem;
+    }
+    
     .user-name {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
     
     .user-email {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
+}
+
+/* ==================== HAMBURGER MENU (MOBILE) ==================== */
+
+/* Hamburger Button - ซ่อนบน desktop */
+.hamburger-menu-btn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+
+/* Sidebar Profile - ซ่อนบน desktop */
+.sidebar-profile {
+    display: none !important;
+}
+
+.hamburger-menu-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.hamburger-menu-btn:active {
+    transform: scale(0.95);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Mobile Menu Header */
+.mobile-menu-header {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid var(--border);
+    background: var(--primary);
+    color: white;
+}
+
+.mobile-menu-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mobile-menu-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    /* ลบ padding ของ body */
+    body {
+        padding: 0;
+    }
+    
+    /* ซ่อน user-profile ใน header บนมือถือ */
+    header .user-profile {
+        display: none !important;
+    }
+    
+    /* แสดง Hamburger Button */
+    .hamburger-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* แสดง Mobile Menu Header */
+    .mobile-menu-header {
+        display: flex;
+    }
+    
+    /* Navigation Menu - Slide in from left */
+    .navigation-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--card-bg);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+        flex-direction: column;
+        padding: 0;
+        gap: 0;
+        display: flex;
+        justify-content: space-between; /* ✅ ให้ profile อยู่ด้านล่าง */
+    }
+    
+    .navigation-menu.active {
+        left: 0;
+    }
+    
+    /* Sidebar Profile Section */
+    .sidebar-profile {
+        display: block !important;
+        background: var(--bg-secondary);
+        border-top: 2px solid var(--border);
+        padding: 15px;
+        margin-top: auto; /* ✅ ดันไปด้านล่าง */
+    }
+    
+    .sidebar-profile-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .sidebar-user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid var(--primary);
+        object-fit: cover;
+        background: white;
+    }
+    
+    .sidebar-profile-details {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        flex: 1;
+    }
+    
+    .sidebar-user-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .sidebar-user-email {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Sidebar Profile Buttons */
+    .sidebar-profile-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .sidebar-btn {
+        width: 100%;
+        padding: 12px 15px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.9rem;
+        position: relative;
+    }
+    
+    .sidebar-btn:hover {
+        background: var(--hover-bg);
+        border-color: var(--primary);
+    }
+    
+    .sidebar-btn i {
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .sidebar-btn-label {
+        flex: 1;
+        text-align: left;
+    }
+    
+    .sidebar-btn-logout {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+        color: var(--danger);
+    }
+    
+    .sidebar-btn-logout:hover {
+        background: var(--danger);
+        color: white;
+    }
+    
+    .sidebar-btn .notification-badge {
+        position: static;
+        margin-left: auto;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        padding: 18px 20px;
+        border-radius: 0;
+        justify-content: flex-start;
+        font-size: 1rem;
+        border-bottom: 1px solid var(--border);
+        transition: all 0.2s ease;
+    }
+    
+    .nav-btn:hover {
+        background: var(--hover-bg);
+        transform: none;
+    }
+    
+    .nav-btn-active {
+        background: var(--primary);
+        color: white;
+        border-left: 4px solid var(--primary-dark);
+    }
+    
+    .nav-btn i {
+        font-size: 1.2rem;
+        width: 30px;
+    }
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .hamburger-menu-btn {
+    background: var(--primary);
+}
+
+[data-theme="dark"] .mobile-menu-header {
+    background: var(--primary);
+    border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .navigation-menu {
+    background: var(--bg-secondary);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
 }

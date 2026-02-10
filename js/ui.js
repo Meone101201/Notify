@@ -2196,3 +2196,150 @@ function setupLeaderboardRealtimeListeners() {
         console.error('Error setting up leaderboard listeners:', error);
     }
 }
+
+
+// ==================== MOBILE MENU FUNCTIONS ====================
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('navigationMenu');
+    const overlay = document.getElementById('mobileMenuOverlay');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    
+    if (menu && overlay) {
+        const isActive = menu.classList.contains('active');
+        
+        if (isActive) {
+            closeMobileMenu();
+        } else {
+            // ✅ Sync profile data to sidebar before opening
+            syncProfileToSidebar();
+            
+            menu.classList.add('active');
+            overlay.classList.add('active');
+            if (hamburgerBtn) {
+                hamburgerBtn.style.display = 'none';
+            }
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+    }
+}
+
+// ✅ Sync profile data from header to sidebar
+function syncProfileToSidebar() {
+    const sidebarProfile = document.getElementById('sidebarProfile');
+    const sidebarAvatar = document.getElementById('sidebarUserAvatar');
+    const sidebarName = document.getElementById('sidebarUserName');
+    const sidebarEmail = document.getElementById('sidebarUserEmail');
+    const sidebarBadge = document.getElementById('sidebarNotificationBadge');
+    
+    // Get data from header
+    const headerAvatar = document.getElementById('userAvatar');
+    const headerName = document.getElementById('userName');
+    const headerEmail = document.getElementById('userEmail');
+    const headerBadge = document.getElementById('notificationBadge');
+    
+    if (STATE.currentUser && sidebarProfile) {
+        // Show sidebar profile
+        sidebarProfile.style.display = 'block';
+        
+        // Sync avatar
+        if (sidebarAvatar && headerAvatar) {
+            sidebarAvatar.src = headerAvatar.src;
+        }
+        
+        // Sync name
+        if (sidebarName && headerName) {
+            sidebarName.textContent = headerName.textContent;
+        }
+        
+        // Sync email
+        if (sidebarEmail && headerEmail) {
+            sidebarEmail.textContent = headerEmail.textContent;
+        }
+        
+        // Sync notification badge
+        if (sidebarBadge && headerBadge) {
+            if (headerBadge.style.display !== 'none') {
+                sidebarBadge.style.display = 'inline-flex';
+                sidebarBadge.textContent = headerBadge.textContent;
+            } else {
+                sidebarBadge.style.display = 'none';
+            }
+        }
+        
+        // Sync dark mode button icon from darkModeManager
+        updateSidebarDarkModeButton();
+    } else if (sidebarProfile) {
+        // Hide sidebar profile if not logged in
+        sidebarProfile.style.display = 'none';
+    }
+}
+
+// ✅ Update sidebar dark mode button based on current theme
+function updateSidebarDarkModeButton() {
+    const sidebarDarkModeBtn = document.querySelector('.sidebar-btn[onclick*="handleSidebarDarkModeToggle"]');
+    
+    if (sidebarDarkModeBtn && typeof darkModeManager !== 'undefined') {
+        const isDarkMode = darkModeManager.isDarkMode();
+        const icon = sidebarDarkModeBtn.querySelector('i');
+        const label = sidebarDarkModeBtn.querySelector('.sidebar-btn-label');
+        
+        if (icon && label) {
+            if (isDarkMode) {
+                icon.className = 'fas fa-sun';
+                label.textContent = 'โหมดสว่าง';
+            } else {
+                icon.className = 'fas fa-moon';
+                label.textContent = 'โหมดมืด';
+            }
+        }
+    }
+}
+
+// ✅ Add event listener for sidebar dark mode toggle
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove old event listener since we're using onclick now
+});
+
+// ✅ Handle dark mode toggle from sidebar
+function handleSidebarDarkModeToggle() {
+    if (typeof darkModeManager !== 'undefined') {
+        darkModeManager.toggle();
+        updateSidebarDarkModeButton(); // Update icon after toggle
+    }
+    // Don't close menu so user can see the change
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('navigationMenu');
+    const overlay = document.getElementById('mobileMenuOverlay');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    
+    if (menu) {
+        menu.classList.remove('active');
+    }
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    if (hamburgerBtn) {
+        hamburgerBtn.style.display = 'flex';
+    }
+    // Restore body scroll
+    document.body.style.overflow = '';
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('navigationMenu');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    
+    if (menu && hamburgerBtn) {
+        const isClickInsideMenu = menu.contains(event.target);
+        const isClickOnHamburger = hamburgerBtn.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnHamburger && menu.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    }
+});

@@ -108,21 +108,68 @@
             </div>
         </div>
 
+        <!-- Hamburger Menu Button (Mobile Only) -->
+        <button class="hamburger-menu-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+
         <!-- Navigation Menu -->
-        <div class="navigation-menu">
-            <button class="nav-btn nav-btn-active" id="navTasks" onclick="showTasksPage()">
+        <div class="navigation-menu" id="navigationMenu">
+            <div class="mobile-menu-header">
+                <h3><i class="fas fa-bars"></i> เมนู</h3>
+                <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Profile Section in Sidebar (Mobile Only) -->
+            <div class="sidebar-profile" id="sidebarProfile" style="display: none;">
+                <div class="sidebar-profile-info">
+                    <img id="sidebarUserAvatar" class="sidebar-user-avatar" src="" alt="User">
+                    <div class="sidebar-profile-details">
+                        <span class="sidebar-user-name" id="sidebarUserName">Guest</span>
+                        <span class="sidebar-user-email" id="sidebarUserEmail">guest@example.com</span>
+                    </div>
+                </div>
+                
+                <!-- Profile Action Buttons -->
+                <div class="sidebar-profile-buttons">
+                    <button class="sidebar-btn" onclick="closeMobileMenu(); setTimeout(() => toggleNotificationsDropdown(), 300);" title="การแจ้งเตือน">
+                        <i class="fas fa-bell"></i>
+                        <span class="sidebar-btn-label">การแจ้งเตือน</span>
+                        <span class="notification-badge" id="sidebarNotificationBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="handleSidebarDarkModeToggle()" title="เปลี่ยนธีม">
+                        <i class="fas fa-moon"></i>
+                        <span class="sidebar-btn-label">โหมดมืด</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="closeMobileMenu(); setTimeout(() => toggleNotificationSettings(), 300);" title="ตั้งค่าการแจ้งเตือน">
+                        <i class="fas fa-cog"></i>
+                        <span class="sidebar-btn-label">ตั้งค่า</span>
+                    </button>
+                    <button class="sidebar-btn sidebar-btn-logout" onclick="closeMobileMenu(); setTimeout(() => signOut(), 300);" title="ออกจากระบบ">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="sidebar-btn-label">ออกจากระบบ</span>
+                    </button>
+                </div>
+            </div>
+            
+            <button class="nav-btn nav-btn-active" id="navTasks" onclick="showTasksPage(); closeMobileMenu();">
                 <i class="fas fa-tasks"></i> งาน
             </button>
-            <button class="nav-btn" id="navFriends" onclick="showFriendsPage()">
+            <button class="nav-btn" id="navFriends" onclick="showFriendsPage(); closeMobileMenu();">
                 <i class="fas fa-user-friends"></i> เพื่อน
             </button>
-            <button class="nav-btn" id="navAchievements" onclick="showAchievementsPage()">
+            <button class="nav-btn" id="navAchievements" onclick="showAchievementsPage(); closeMobileMenu();">
                 <i class="fas fa-trophy"></i> อชีฟเมนต์
             </button>
-            <button class="nav-btn" id="navLeaderboard" onclick="showLeaderboardPage()">
+            <button class="nav-btn" id="navLeaderboard" onclick="showLeaderboardPage(); closeMobileMenu();">
                 <i class="fas fa-medal"></i> อันดับ
             </button>
         </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
 
         <!-- Tasks Page -->
         <div class="tasks-page" id="tasksPage">
