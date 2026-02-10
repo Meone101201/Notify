@@ -116,13 +116,26 @@
         <!-- Navigation Menu -->
         <div class="navigation-menu" id="navigationMenu">
             <div class="mobile-menu-header">
-                <h3><i class="fas fa-bars"></i> เมนู</h3>
+                <h3><i class="fas fa-clipboard-list"></i> Agile Task Board</h3>
                 <button class="mobile-menu-close" onclick="toggleMobileMenu()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <!-- Profile Section in Sidebar (Mobile Only) -->
+            <button class="nav-btn nav-btn-active" id="navTasks" onclick="showTasksPage(); closeMobileMenu();">
+                <i class="fas fa-tasks"></i> งาน
+            </button>
+            <button class="nav-btn" id="navFriends" onclick="showFriendsPage(); closeMobileMenu();">
+                <i class="fas fa-user-friends"></i> เพื่อน
+            </button>
+            <button class="nav-btn" id="navAchievements" onclick="showAchievementsPage(); closeMobileMenu();">
+                <i class="fas fa-trophy"></i> อชีฟเมนต์
+            </button>
+            <button class="nav-btn" id="navLeaderboard" onclick="showLeaderboardPage(); closeMobileMenu();">
+                <i class="fas fa-medal"></i> อันดับ
+            </button>
+            
+            <!-- Profile Section in Sidebar (Mobile Only) - ย้ายมาด้านล่างสุด -->
             <div class="sidebar-profile" id="sidebarProfile" style="display: none;">
                 <div class="sidebar-profile-info">
                     <img id="sidebarUserAvatar" class="sidebar-user-avatar" src="" alt="User">
@@ -153,19 +166,6 @@
                     </button>
                 </div>
             </div>
-            
-            <button class="nav-btn nav-btn-active" id="navTasks" onclick="showTasksPage(); closeMobileMenu();">
-                <i class="fas fa-tasks"></i> งาน
-            </button>
-            <button class="nav-btn" id="navFriends" onclick="showFriendsPage(); closeMobileMenu();">
-                <i class="fas fa-user-friends"></i> เพื่อน
-            </button>
-            <button class="nav-btn" id="navAchievements" onclick="showAchievementsPage(); closeMobileMenu();">
-                <i class="fas fa-trophy"></i> อชีฟเมนต์
-            </button>
-            <button class="nav-btn" id="navLeaderboard" onclick="showLeaderboardPage(); closeMobileMenu();">
-                <i class="fas fa-medal"></i> อันดับ
-            </button>
         </div>
 
         <!-- Mobile Menu Overlay -->
