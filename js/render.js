@@ -580,9 +580,9 @@ function renderCollaborators(task) {
     return `
         <div class="collaborators-section">
             <div class="collaborators-list">
-                <div class="collaborators-group">
-                    <div class="collaborators-label">
-                        <i class="fas fa-user-crown"></i> ผู้รับผิดชอบ:
+                <div class="collaborators-group collaborators-group-owner">
+                    <div class="collaborators-label collaborators-label-owner">
+                        <i class="fas fa-crown"></i> ผู้รับผิดชอบ:
                     </div>
                     <div class="collaborators-avatars">
                         ${ownerInfo}
@@ -591,7 +591,7 @@ function renderCollaborators(task) {
                 ${actualCollaboratorCount > 0 ? `
                 <div class="collaborators-group">
                     <div class="collaborators-label">
-                        <i class="fas fa-user-friends"></i> ผู้ร่วมงาน:
+                        <i class="fas fa-users"></i> ผู้ร่วมงาน:
                     </div>
                     <div class="collaborators-avatars">
                         ${collaboratorAvatars}

@@ -3082,6 +3082,18 @@ td {
     gap: 6px;
 }
 
+/* ✅ ผู้รับผิดชอบ - เด่นกว่า */
+.collaborators-label-owner {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.95rem;
+}
+
+.collaborators-label-owner i {
+    color: #f59e0b;
+    font-size: 1.1rem;
+}
+
 .collaborators-avatars {
     display: flex;
     align-items: center;
@@ -4621,6 +4633,7 @@ td {
         justify-content: center;
         gap: 10px;
         padding: 15px;
+        border-radius: 15px; /* ✅ ลดเหลือ 15px */
     }
     
     .profile-info {
@@ -4663,7 +4676,7 @@ td {
         width: 100%;
         min-width: unset;
         height: 50px;
-        border-radius: 12px;
+        border-radius: 10px; /* ✅ ลดความมนจาก 50% (วงกลม) */
     }
     
     .btn-notification-bell i,
@@ -4953,28 +4966,53 @@ td {
     
     /* Collaborators Section */
     .collaborators-section {
-        padding: 10px;
+        padding: 12px;
+        margin: 12px 0;
     }
     
     .collaborators-list {
         flex-direction: column;
-        gap: 10px;
+        align-items: stretch;
+        gap: 12px;
     }
     
     .collaborators-group {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
     }
     
     .collaborators-label {
         font-size: 0.85rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .collaborators-avatars {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
     }
     
     .collaborator-avatar {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         font-size: 0.7rem;
+        margin-left: 0 !important;
+    }
+    
+    .collaborator-avatar-more {
+        width: 32px;
+        height: 32px;
+        font-size: 0.7rem;
+    }
+    
+    .last-modified-info {
+        font-size: 0.75rem;
+        margin-top: 8px;
     }
     
     .last-modified-info {
