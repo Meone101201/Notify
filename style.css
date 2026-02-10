@@ -5487,24 +5487,33 @@ td {
         z-index: 1001;
         transition: left 0.3s ease;
         overflow-y: auto;
+        overflow-x: hidden;
         flex-direction: column;
         padding: 0;
         gap: 0;
         display: flex;
-        justify-content: space-between; /* ✅ ให้ profile อยู่ด้านล่าง */
     }
     
     .navigation-menu.active {
         left: 0;
     }
     
-    /* Sidebar Profile Section */
+    /* Navigation Buttons Container - ให้ scroll ได้ */
+    .navigation-menu > .nav-btn {
+        flex-shrink: 0; /* ไม่ให้หดตัว */
+    }
+    
+    /* Sidebar Profile Section - ติดด้านล่างเสมอ */
     .sidebar-profile {
         display: block !important;
         background: var(--bg-secondary);
         border-top: 2px solid var(--border);
         padding: 15px;
         margin-top: auto; /* ✅ ดันไปด้านล่าง */
+        flex-shrink: 0; /* ✅ ไม่ให้หดตัว */
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
     }
     
     .sidebar-profile-info {
