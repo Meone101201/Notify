@@ -5533,15 +5533,24 @@ td {
         padding: 0;
         gap: 0;
         display: flex;
+        justify-content: space-between; /* ✅ เว้นพื้นที่ตรงกลาง */
     }
     
     .navigation-menu.active {
         left: 0;
     }
     
-    /* Navigation Buttons Container - ให้ scroll ได้ */
+    /* Navigation Buttons Container - ชิดด้านบน */
     .navigation-menu > .nav-btn {
-        flex-shrink: 0; /* ไม่ให้หดตัว */
+        flex-shrink: 0;
+    }
+    
+    /* เพิ่ม wrapper สำหรับปุ่มเมนู (ถ้ามี) */
+    .nav-buttons-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+        gap: 5px;
     }
     
     /* Sidebar Profile Section - ติดด้านล่างเสมอ */
@@ -5655,29 +5664,34 @@ td {
     }
     
     .nav-btn {
-        width: 100%;
-        padding: 18px 20px;
-        border-radius: 0;
-        justify-content: flex-start;
-        font-size: 1rem;
-        border-bottom: 1px solid var(--border);
+        width: auto; /* ✅ ไม่เต็มความกว้าง */
+        padding: 10px 16px; /* ✅ ลด padding */
+        border-radius: 20px; /* ✅ ขอบมน */
+        justify-content: center;
+        font-size: 0.9rem;
+        border-bottom: none; /* ✅ ลบเส้นขอบ */
         transition: all 0.2s ease;
+        margin: 5px 10px; /* ✅ เว้นระยะรอบๆ */
+        background: var(--bg-tertiary);
     }
     
     .nav-btn:hover {
         background: var(--hover-bg);
-        transform: none;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     .nav-btn-active {
         background: var(--primary);
         color: white;
-        border-left: 4px solid var(--primary-dark);
+        border-left: none; /* ✅ ลบเส้นขอบซ้าย */
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
     }
     
     .nav-btn i {
-        font-size: 1.2rem;
-        width: 30px;
+        font-size: 1.1rem;
+        width: auto;
+        margin-right: 6px;
     }
 }
 
